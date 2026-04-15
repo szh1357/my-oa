@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="max-width:600px;margin:0 auto;">
+  <div class="card">
+    <h2>新建任务</h2>
+    <form method="post">
+      <label>任务名称</label>
+      <input type="text" name="title" required autofocus>
+      <label>任务描述（可选）</label>
+      <textarea name="description"></textarea>
+      <label>指派给</label>
+      <select name="assignee_id" required>
+        {% for u in users %}
+        <option value="{{ u.id }}">{{ u.username }}{% if u.is_admin %} (管理员){% endif %}</option>
+        {% endfor %}
+      </select>
+      <label>截止日期（可选）</label>
+      <input type="date" name="due_date">
+      <div style="display:flex;gap:10px;">
+        <button type="submit" class="btn btn-primary">创建</button>
+        <a href="{{ url_for('tasks') }}" class="btn" style="background:#eee;">取消</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

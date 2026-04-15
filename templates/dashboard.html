@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 style="margin-bottom:16px;font-size:20px;">你好，{{ current_user.username }} 👋</h2>
+
+<div class="grid-3" style="margin-bottom:16px;">
+  <div class="stat-card">
+    <div class="num">{{ announcements|length }}</div>
+    <div class="label">最新公告</div>
+  </div>
+  <div class="stat-card">
+    <div class="num">{{ my_tasks|length }}</div>
+    <div class="label">待完成任务</div>
+  </div>
+  <div class="stat-card">
+    <div class="num" style="color:{% if checked_in %}#34a853{% else %}#ea4335{% endif %}">
+      {% if checked_in %}✓{% else %}✗{% endif %}
+    </div>
+    <div class="label">今日打卡</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>📢 最新公告</h2>
+  {% if announcements %}
+    {% for a in announcements %}
+    <div style="padding:10px 0;border-bottom:1px solid #f0f0f0;">
+      <div style="font-weight:500;">{{ a.title }}</div>
+      <div style="font-size:13px;color:#888;margin-top:4px;">{{ a.created_at.strftime('%Y-%m-%d %H:%M') }} · {{ a.author.username }}</div>
+    </div>
+    {% endfor %}
+    <a href="{{ url_for('announcements') }}" style="display:block;text-align:center;margin-top:12px;font-size:14px;color:#1a73e8;">查看全部公告</a>
+  {% else %}
+    <p style="color:#aaa;font-size:14px;">暂无公告</p>
+  {% endif %}
+</div>
+
+<div class="card">
+  <h2>✅ 我的待办任务</h2>
+  {% if my_tasks %}
+    {% for t in my_tasks %}
+    <div style="padding:10px 0;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-weight:500;">{{ t.title }}</div>
+        {% if t.due_date %}<div style="font-size:13px;color:#888;">截止：{{ t.due_date }}</div>{% endif %}
+      </div>
+      <a href="{{ url_for('complete_task', id=t.id) }}" class="btn btn-success btn-sm">完成</a>
+    </div>
+    {% endfor %}
+  {% else %}
+    <p style="color:#aaa;font-size:14px;">暂无待办任务 🎉</p>
+  {% endif %}
+</div>
+
+{% if not checked_in %}
+<div class="card" style="text-align:center;">
+  <p style="margin-bottom:12px;color:#555;">今天还没打卡哦</p>
+  <a href="{{ url_for('attendance') }}" class="btn btn-primary">去打卡</a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="max-width:380px;margin:60px auto;">
+  <div class="card">
+    <h1 style="text-align:center;margin-bottom:24px;font-size:22px;">注册账号</h1>
+    <form method="post">
+      <label>用户名</label>
+      <input type="text" name="username" required autofocus>
+      <label>密码</label>
+      <input type="password" name="password" required>
+      <button type="submit" class="btn btn-primary" style="width:100%;padding:10px;">注册</button>
+    </form>
+    <p style="text-align:center;margin-top:16px;font-size:14px;color:#888;">
+      已有账号？<a href="{{ url_for('login') }}" style="color:#1a73e8;">登录</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

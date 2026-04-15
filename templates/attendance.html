@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 style="font-size:20px;margin-bottom:16px;">🕐 考勤打卡</h2>
+
+<div class="card" style="text-align:center;padding:32px;">
+  <p style="font-size:16px;color:#555;margin-bottom:16px;">今天：{{ today }}</p>
+  {% if checked_in %}
+    <div style="font-size:48px;margin-bottom:8px;">✅</div>
+    <p style="color:#34a853;font-size:18px;font-weight:500;">已打卡</p>
+    <p style="color:#888;font-size:14px;margin-top:8px;">打卡时间：{{ checked_in.check_in_time }}</p>
+    {% if checked_in.note %}<p style="color:#888;font-size:14px;">备注：{{ checked_in.note }}</p>{% endif %}
+  {% else %}
+    <div style="font-size:48px;margin-bottom:16px;">⏰</div>
+    <form method="post" action="{{ url_for('checkin') }}">
+      <input type="text" name="note" placeholder="备注（可选，如：在家办公）"
+             style="max-width:300px;margin:0 auto 16px;">
+      <br>
+      <button type="submit" class="btn btn-primary" style="padding:12px 40px;font-size:16px;">立即打卡</button>
+    </form>
+  {% endif %}
+</div>
+
+<div class="card">
+  <h2>打卡记录{% if not current_user.is_admin %}（我的）{% else %}（全部）{% endif %}</h2>
+  {% if records %}
+  <table>
+    <thead>
+      <tr>
+        {% if current_user.is_admin %}<th>成员</th>{% endif %}
+        <th>日期</th>
+        <th>打卡时间</th>
+        <th>备注</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in records %}
+      <tr>
+        {% if current_user.is_admin %}<td>{{ r.user.username }}</td>{% endif %}
+        <td>{{ r.date }}</td>
+        <td>{{ r.check_in_time }}</td>
+        <td>{{ r.note or '-' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p style="color:#aaa;text-align:center;padding:20px;">暂无记录</p>
+  {% endif %}
+</div>
+{% endblock %}
